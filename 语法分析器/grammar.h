@@ -15,7 +15,7 @@ struct production {
 };
 
 class grammar {
-private:
+public:
 	vector<token> non_terminators, terminators;
 	token start_token;
 	vector<production> productions;

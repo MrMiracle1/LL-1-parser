@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -153,10 +153,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="grammar.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="语法分析器.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

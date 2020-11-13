@@ -225,7 +225,7 @@ grammar::grammar():
 	non_terminators({ "E", "T", "F" }),
 	terminators(
 		{
-			"+", "-", "*", "/", "(", ")","n","0"
+			"+", "-", "*", "/", "(", ")","n","0","dollar"
 		}
 	),
 	start_token("E"),
