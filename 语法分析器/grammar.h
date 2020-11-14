@@ -33,4 +33,5 @@ public:
 	void output_productions();
 	void output_first();
 	void output_follow();
+	void output_first_follow();
 };

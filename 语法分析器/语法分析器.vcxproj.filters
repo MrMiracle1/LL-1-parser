@@ -21,9 +21,21 @@
     <ClCompile Include="grammar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\c++\宠物小精灵\阶段3\服务端\split.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grammar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="split.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

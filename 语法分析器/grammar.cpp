@@ -1,6 +1,8 @@
 #include"grammar.h"
 #include<iostream>
 #include<algorithm>
+#include<iomanip>
+#include"split.h"
 void grammar::remove_recursion()//消除左递归
 {
 	int t = 0;//productions_class的初始化
@@ -55,7 +57,7 @@ void grammar::remove_recursion()//消除左递归
 			productions_class[new_non_terminator].insert(productions.size());//增加新非终结符下一个产生式
 			production new_production;//新产生式定义
 			new_production.left = new_non_terminator;//新产生式左侧为新非终结符
-			new_production.right = deque<token>{ "0" };//新产生式右侧为空
+			new_production.right = deque<token>{ "ε" };//新产生式右侧为空
 			productions.emplace_back(new_production);//加入该新产生式
 			/*productions.emplace_back(new_non_terminator, deque<token>{NULL});*/
 			for (int i : left_recursion_productions)//遍历所有左递归产生式
@@ -93,19 +95,19 @@ void grammar::first_derivation(const token& non_terminator)//计算first集
 				first_derivation(j);
 			}
 			first_of_production[i].insert(first[j].begin(), first[j].end());
-			if (first[j].find("0") == first[j].end())
+			if (first[j].find("ε") == first[j].end())
 			{
 				all_epsilon = false;
 				break;
 			}
 			else
 			{
-				first_of_production[i].erase("0");
+				first_of_production[i].erase("ε");
 			}
 		}
 		if (all_epsilon)
 		{
-			first_of_production[i].insert("0");
+			first_of_production[i].insert("ε");
 		}
 		first[non_terminator].insert(first_of_production[i].begin(), first_of_production[i].end());
 	}
@@ -132,13 +134,13 @@ void grammar::follow_derivation(const token& non_terminator)
 							break;
 						}
 						follow[non_terminator].insert(first[temp_token].begin(), first[temp_token].end());
-						if (first[temp_token].find("0") == first[temp_token].end())
+						if (first[temp_token].find("ε") == first[temp_token].end())
 						{
 							break;
 						}
 						else
 						{
-							follow[non_terminator].erase("0");
+							follow[non_terminator].erase("ε");
 						}
 					}
 					if (k == current_production.right.size() && current_production.left != non_terminator)
@@ -181,18 +183,12 @@ void grammar::output_first()
 	for (token i : non_terminators)
 	{
 		first_derivation(i);
-		cout << i << ": ";
-		for (token j : first[i])
-		{
-			cout << j << " ";
-		}
-		cout << endl;
 	}
 }
 
 void grammar::output_follow()
 {
-	follow[start_token].insert("dollar");
+	follow[start_token].insert("$");
 	for (token i : non_terminators)
 	{
 		if(!follow_over[i])
@@ -209,15 +205,31 @@ void grammar::output_follow()
 				follow_include[i][j] = follow_include[j][i] = false;
 			}
 		}
-	}
+	}	
+}
+
+void grammar::output_first_follow()
+{
+	cout << "----------------------------------------------" << endl;
+	cout << setiosflags(ios::left) << setw(15) << " " << setw(15) << "first" << setw(15) << "follow" << endl;
+	cout << "----------------------------------------------" << endl;
 	for (token i : non_terminators)
 	{
-		cout << i << ": ";
+		cout  << setw(15) << i + ": ";
+		string fi = "{",fo="{";
+		for (token j : first[i])
+		{
+			fi+=j+",";
+		}
+		fi=fi.substr(0, fi.size() - 1);
+		fi += "}";
 		for (token j : follow[i])
 		{
-			cout << j << " ";
+			fo+=j+",";
 		}
-		cout << endl;
+		fo=fo.substr(0, fo.size() - 1);
+		fo += "}";
+		cout << setw(15)<<fi<<setw(15)<<fo<<endl;
 	}
 }
 
@@ -225,7 +237,7 @@ grammar::grammar():
 	non_terminators({ "E", "T", "F" }),
 	terminators(
 		{
-			"+", "-", "*", "/", "(", ")","n","0","dollar"
+			"+", "-", "*", "/", "(", ")","n","ε","$"
 		}
 	),
 	start_token("E"),
@@ -260,6 +272,35 @@ grammar::grammar():
 		}
 	)
 {
+	//FILE *fptr1;
+	//if(!(fptr1 = fopen("grammar.in", "r")))
+	//	printf("打开文件失败！");
+	//char buf[100];
+	//fgets(buf, 100, fptr1);
+	//token s=buf;
+	//s = s.substr(0, s.size() - 1);
+	//non_terminators = split(s);
+	//fgets(buf, 100, fptr1);
+	//s = buf;
+	//s = s.substr(0, s.size() - 1);
+	//terminators = split(s);
+	//terminators.push_back("ε");
+	//terminators.push_back("$");
+	//fgets(buf, 100, fptr1);
+	//s = buf;
+	//start_token = buf;
+	//while (!feof(fptr1))
+	//{
+	//	fgets(buf, 100, fptr1);
+	//	token left = string(1,buf[0]);
+	//	deque<token> right;
+	//	for (int i = 3;buf[i] != '\n'&&buf[i]!=-'\0';i++)
+	//	{
+	//		right.push_back(string(1, buf[i]));
+	//	}
+	//	production p = {left,right};
+	//	productions.push_back(p);
+	//}
 	for (token i : non_terminators)
 	{
 		first_over.insert(pair<token, bool>(i, false));
