@@ -11,7 +11,14 @@ void parser::input_token()
 	{
 		char c = fgetc(fptr);
 		if (c == -1)
+		{
+			if (num.size())
+			{
+				token_stream.emplace_back("n");
+				num = "";
+			}
 			break;
+		}		
 		if (c > '9' || c < '0')
 		{
 			if (num.size())
@@ -110,7 +117,7 @@ void parser::output_parser_table()
 			}
 			else if(temp==-2)
 			{
-				cout <<setw(10)<<" ";
+				cout <<setw(10)<<"error";
 				continue;
 			}
 			token s= g.productions[temp].left+"->";
@@ -139,6 +146,8 @@ void parser::predict()
 	vector<token>::iterator iter = token_stream.begin();
 	for (int d=1;iter != token_stream.end();d++)
 	{
+		if (parser_stack.empty())
+			break;
 		cout << setw(10) << d;
 		string s = "";
 		for (token t : left_pattern.first)
@@ -182,6 +191,7 @@ void parser::predict()
 			if (p == -2)
 			{
 				s+= "error:" + *iter + " unexpected";
+				iter++;
 			}
 			else if (p == -1)
 			{
